@@ -10,9 +10,12 @@
 #include <stdlib.h>
 #include <math.h> 
 #include <string.h>
+#include <map>
 
 namespace JP{
 using namespace std;
+class VAL;
+
 class Json_Praser{
 public:
     //返回值状态定义
@@ -24,7 +27,8 @@ public:
         PARSE_INVALID_STRING_ESCAPE,
         PARSE_MISS_QUOTATION_MARK,
         PARSE_INVALID_STRING_CHAR, //无效的char
-        PARSE_INVALID_UNICODE_HEX   //无效的码点
+        PARSE_INVALID_UNICODE_HEX,   //无效的码点
+        PARSE_MISS_COMMA_OR_SQUARE_BRACKET
     } ;
     //类型定义
     enum TYPE {
@@ -32,7 +36,9 @@ public:
         JP_TRUE,                
         JP_FALSE,
         JP_NUMBER,
-        JP_STRING
+        JP_STRING,
+        JP_ARRAY,
+        JP_OBJECT
     };
     // 节点值定义
     class VAL{
@@ -40,8 +46,14 @@ public:
         VAL():t(JP_NULL){}
         TYPE t;
         
+        //数组
+        vector<VAL> a;
+        //double
         double number;
+        //string
         string s;
+        //obj
+        map<string, VAL> obj;
     };
 
     Json_Praser(){};
@@ -52,17 +64,26 @@ public:
     PRASE_STATE prase_null(VAL& v);     //解析null
     PRASE_STATE prase_number(VAL& v);   //解析number
     PRASE_STATE prase_string(VAL& v);   //解析string
-    void init();                        //初始化方法
+    PRASE_STATE prase_array(VAL& v);    //解析array
+    PRASE_STATE prase_obj(VAL& v);      //解析obj
+
+    void init(VAL& v);                  //初始化方法
     bool parse_hex4(unsigned &u);       //解析4位码点
     void encode_utf_8(VAL& v, unsigned u);      //编码utf_8
+
 
     void jump_space();                  //跳过空白
     double get_number(VAL& v);          //得到数字
     const char* get_string(VAL& v);     //得到string
     int get_string_length(VAL& v);      //得到长度
+    VAL& get_array_element(VAL& v, int idx);
+    int get_array_size(VAL& v);         //得到数组长度
+    int get_obj_size(VAL& v);           //得到对象size
 
     TYPE get_type(VAL& v);              //得到类型
-    PRASE_STATE prase_json();           //开始解析
+    PRASE_STATE prase_json(VAL& v);     //开始解析
+
+    bool has_key(VAL& v, string key);
 
     string json;            // 需要解析的json字符串
     int cur_prasc_idx;      // 当前解析的idx

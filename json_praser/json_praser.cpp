@@ -4,9 +4,19 @@ namespace JP{
     #define ISDIGIT1TO9(ch) ((ch)>= '1'&& (ch)<= '9')
     #define ISDIGIT(ch) ((ch)>= '0'&& (ch)<= '9')
 
+    bool Json_Praser::has_key(VAL& v, string key){
+        assert(v.t == JP_OBJECT);
+        return v.obj.find(key) != v.obj.end();
+    }
+
     const char* Json_Praser::get_string(VAL& v){
         assert(v.t == JP_STRING);
         return v.s.c_str();
+    }
+
+    int Json_Praser::get_obj_size(VAL& v){
+        assert(v.t == JP_OBJECT);
+        return v.obj.size();
     }
 
     int Json_Praser::get_string_length(VAL& v){
@@ -15,23 +25,26 @@ namespace JP{
     }
 
     Json_Praser::PRASE_STATE Json_Praser::operator()(string json_str){
+        init(prase_res);
         this->json = json_str;
         cur_prasc_idx = 0;
         PRASE_STATE ret;
         jump_space();
-        if((ret=prase_json()) == PRASE_OK ){
+        if((ret=prase_json(prase_res)) == PRASE_OK ){
             jump_space();
             if(cur_prasc_idx< json.size()){
                 prase_res.t = JP_NULL;
                 ret = PARSE_ROOT_NOT_SINGULAR;
-            }
-                
+            }  
         }
         return ret;
     }
 
-    void Json_Praser::init(){
-        prase_res.t = JP_NULL;
+    void Json_Praser::init(VAL& v){
+        v.t = JP_NULL;
+        v.s.clear();
+        v.a.clear();
+        v.obj.clear();
     }
 
     void Json_Praser::jump_space(){
@@ -42,16 +55,25 @@ namespace JP{
         ) cur_prasc_idx++;
     }
 
-    Json_Praser::PRASE_STATE Json_Praser::prase_json(){   
+    Json_Praser::PRASE_STATE Json_Praser::prase_json(VAL& v){   
+        jump_space();
         switch(json[cur_prasc_idx]){
             case 't':
-            case 'f': return prase_bool(prase_res);
-            case 'n': return prase_null(prase_res);
-            case '\"': return prase_string(prase_res);
-            default: return prase_number(prase_res);
+            case 'f': return prase_bool(v);
+            case 'n': return prase_null(v);
+            case '\"': return prase_string(v);
+            case '[': return prase_array(v);
+            case '{': return prase_obj(v);
+            default: return prase_number(v);
         }
         
         return PRASE_OK; 
+    }
+
+    Json_Praser::PRASE_STATE Json_Praser::prase_obj(VAL& v){
+        assert(json[cur_prasc_idx] == '{');
+        jump_space();
+        
     }
 
     bool Json_Praser::parse_hex4(unsigned &u){
@@ -86,6 +108,40 @@ namespace JP{
         }
 
     }
+
+
+
+    Json_Praser::PRASE_STATE Json_Praser::prase_array(VAL& v){
+        assert(json[cur_prasc_idx] == '[');
+        cur_prasc_idx += 1;
+        jump_space();
+        if(json[cur_prasc_idx] == ']'){
+            cur_prasc_idx += 1;
+            v.t = JP_ARRAY;
+            return PRASE_OK;
+        }
+        PRASE_STATE ret;
+        while(1){
+            VAL e;
+            if((ret = prase_json(e)) != PRASE_OK)
+                break;
+            v.a.push_back(e);
+            jump_space();
+            if(json[cur_prasc_idx] == ','){
+                cur_prasc_idx += 1;
+                jump_space();
+            }else if(json[cur_prasc_idx] == ']'){
+                cur_prasc_idx += 1;
+                v.t = JP_ARRAY;
+                return PRASE_OK;
+            }else{
+                ret = PARSE_MISS_COMMA_OR_SQUARE_BRACKET;
+                break;
+            }
+        }
+        init(v);
+        return ret;
+    }   
 
     Json_Praser::PRASE_STATE Json_Praser::prase_string(VAL& v){
         assert(json[cur_prasc_idx] == '\"');
@@ -230,10 +286,23 @@ namespace JP{
 
     double Json_Praser::get_number(VAL& v){
         assert(v.t == JP_NUMBER);
-        return prase_res.number;
+        return v.number;
     }
 
     Json_Praser::TYPE Json_Praser::get_type(VAL& v){
         return v.t;
     }
+
+    Json_Praser::VAL& Json_Praser::get_array_element(Json_Praser::VAL& v, int idx){
+        assert(v.t == JP_ARRAY);
+        assert(v.a.size()> idx && idx>= 0);
+        return v.a[idx];
+    }
+
+    int Json_Praser::get_array_size(Json_Praser::VAL& v){
+        assert(v.t == JP_ARRAY);
+        return v.a.size();
+    }
+
 }
+
