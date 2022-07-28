@@ -6,7 +6,39 @@
 
 #IncludeRegexTransform: 
 
+/home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp
+json_praser.h
+/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+
+/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+iostream
+-
+vector
+-
+unordered_map
+-
+assert.h
+-
+string
+-
+errno.h
+-
+stdlib.h
+-
+math.h
+-
+string.h
+-
+
 /home/xx/桌面/json_prase_c++/main.cpp
 iostream
+-
+json_praser/json_praser.h
+/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+stdio.h
+-
+stdlib.h
+-
+string.h
 -
 

@@ -3,5 +3,10 @@
   "directory": "/home/xx/桌面/json_prase_c++/build",
   "command": "/usr/bin/g++    -g   -o CMakeFiles/json_praser.dir/main.cpp.o -c /home/xx/桌面/json_prase_c++/main.cpp",
   "file": "/home/xx/桌面/json_prase_c++/main.cpp"
+},
+{
+  "directory": "/home/xx/桌面/json_prase_c++/build",
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o -c /home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp",
+  "file": "/home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp"
 }
 ]

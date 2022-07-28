@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp" "/home/xx/桌面/json_prase_c++/build/CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o"
   "/home/xx/桌面/json_prase_c++/main.cpp" "/home/xx/桌面/json_prase_c++/build/CMakeFiles/json_praser.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

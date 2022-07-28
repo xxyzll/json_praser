@@ -520,6 +520,33 @@ ExperimentalBuild/fast:
 	$(MAKE) -f CMakeFiles/ExperimentalBuild.dir/build.make CMakeFiles/ExperimentalBuild.dir/build
 .PHONY : ExperimentalBuild/fast
 
+json_praser/json_praser.o: json_praser/json_praser.cpp.o
+
+.PHONY : json_praser/json_praser.o
+
+# target to build an object file
+json_praser/json_praser.cpp.o:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o
+.PHONY : json_praser/json_praser.cpp.o
+
+json_praser/json_praser.i: json_praser/json_praser.cpp.i
+
+.PHONY : json_praser/json_praser.i
+
+# target to preprocess a source file
+json_praser/json_praser.cpp.i:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.i
+.PHONY : json_praser/json_praser.cpp.i
+
+json_praser/json_praser.s: json_praser/json_praser.cpp.s
+
+.PHONY : json_praser/json_praser.s
+
+# target to generate assembly for a file
+json_praser/json_praser.cpp.s:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.s
+.PHONY : json_praser/json_praser.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -587,6 +614,9 @@ help:
 	@echo "... ContinuousTest"
 	@echo "... ContinuousUpdate"
 	@echo "... ExperimentalBuild"
+	@echo "... json_praser/json_praser.o"
+	@echo "... json_praser/json_praser.i"
+	@echo "... json_praser/json_praser.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
