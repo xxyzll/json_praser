@@ -23,7 +23,8 @@ public:
         PARSE_NUMBER_TOO_BIG,    //解析数字过大
         PARSE_INVALID_STRING_ESCAPE,
         PARSE_MISS_QUOTATION_MARK,
-        PARSE_INVALID_STRING_CHAR //无效的char
+        PARSE_INVALID_STRING_CHAR, //无效的char
+        PARSE_INVALID_UNICODE_HEX   //无效的码点
     } ;
     //类型定义
     enum TYPE {
@@ -52,7 +53,8 @@ public:
     PRASE_STATE prase_number(VAL& v);   //解析number
     PRASE_STATE prase_string(VAL& v);   //解析string
     void init();                        //初始化方法
-
+    bool parse_hex4(unsigned &u);       //解析4位码点
+    void encode_utf_8(VAL& v, unsigned u);      //编码utf_8
 
     void jump_space();                  //跳过空白
     double get_number(VAL& v);          //得到数字

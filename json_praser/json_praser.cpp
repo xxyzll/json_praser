@@ -11,7 +11,7 @@ namespace JP{
 
     int Json_Praser::get_string_length(VAL& v){
         assert(v.t == JP_STRING);
-        return strlen(v.s.c_str());
+        return v.s.size();
     }
 
     Json_Praser::PRASE_STATE Json_Praser::operator()(string json_str){
@@ -54,9 +54,44 @@ namespace JP{
         return PRASE_OK; 
     }
 
+    bool Json_Praser::parse_hex4(unsigned &u){
+        u = 0;
+        for (int i = 0; i < 4; i++) {
+            char ch = json[cur_prasc_idx++];
+            u <<= 4;
+            if      (ch >= '0' && ch <= '9')  u |= ch - '0';
+            else if (ch >= 'A' && ch <= 'F')  u |= ch - ('A' - 10);
+            else if (ch >= 'a' && ch <= 'f')  u |= ch - ('a' - 10);
+            else return NULL;
+        }
+        return true;
+    }
+
+    void Json_Praser::encode_utf_8(VAL& v, unsigned u){
+        if (u <= 0x7F)
+            v.s.push_back(u & 0xFF);
+        else if(u<= 0x7FF){
+            v.s.push_back(0xC0 | ((u >> 6) & 0xFF));
+            v.s.push_back(0x80 | ( u       & 0x3F));
+        }else if (u <= 0xFFFF) {
+            v.s.push_back(0xE0 | ((u >> 12) & 0xFF));
+            v.s.push_back(0x80 | ((u >>  6) & 0x3F));
+            v.s.push_back(0x80 | ( u        & 0x3F));
+        }else {
+            assert(u <= 0x10FFFF);
+            v.s.push_back(0xF0 | ((u >> 18) & 0xFF));
+            v.s.push_back(0x80 | ((u >> 12) & 0x3F));
+            v.s.push_back(0x80 | ((u >>  6) & 0x3F));
+            v.s.push_back(0x80 | ( u        & 0x3F));
+        }
+
+    }
+
     Json_Praser::PRASE_STATE Json_Praser::prase_string(VAL& v){
         assert(json[cur_prasc_idx] == '\"');
         cur_prasc_idx += 1;
+        unsigned u, u2;
+
         while(1){
             char ch = json[cur_prasc_idx++];
             switch(ch){
@@ -71,6 +106,32 @@ namespace JP{
                         case 'n':  v.s.push_back('\n'); break;
                         case 'r':  v.s.push_back('\r'); break;
                         case 't':  v.s.push_back('\t'); break; 
+                        case 'u':
+                            if (!(parse_hex4(u))){
+                                v.s.clear();
+                                return PARSE_INVALID_UNICODE_HEX;
+                            } 
+                            if (u >= 0xD800 && u <= 0xDBFF) { 
+                                if (json[cur_prasc_idx++] != '\\'){
+                                    v.s.clear();
+                                    return PARSE_INVALID_UNICODE_HEX;
+                                }
+                                if (json[cur_prasc_idx++] != 'u'){
+                                    v.s.clear();
+                                    return PARSE_INVALID_UNICODE_HEX;
+                                }
+                                if (!(parse_hex4(u2))){
+                                    v.s.clear();
+                                    return PARSE_INVALID_UNICODE_HEX;
+                                }
+                                if (u2 < 0xDC00 || u2 > 0xDFFF){
+                                    v.s.clear();
+                                    return PARSE_INVALID_UNICODE_HEX;
+                                }
+                                u = (((u - 0xD800) << 10) | (u2 - 0xDC00)) + 0x10000;
+                            }
+                            encode_utf_8(v, u);
+                            break;
                         default:
                         v.s.clear();
                         return PARSE_INVALID_STRING_ESCAPE;

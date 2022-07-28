@@ -68,6 +68,7 @@ int main(int, char**) {
 }
 
 
+
 static void test_parse_expect_value() {
     using namespace JP;
     Json_Praser op;
@@ -161,10 +162,14 @@ static void test_parse_string() {
     using namespace JP;
     TEST_STRING("", "\"\"");
     TEST_STRING("Hello", "\"Hello\"");
-#if 1
     TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
     TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
-#endif
+    TEST_STRING("Hello\0World", "\"Hello\\u0000World\"");
+    TEST_STRING("\x24", "\"\\u0024\"");         
+    TEST_STRING("\xC2\xA2", "\"\\u00A2\"");     
+    TEST_STRING("\xE2\x82\xAC", "\"\\u20AC\""); 
+    TEST_STRING("\xF0\x9D\x84\x9E", "\"\\uD834\\uDD1E\""); 
+    TEST_STRING("\xF0\x9D\x84\x9E", "\"\\ud834\\udd1e\""); 
 }
 
 static void test_parse_invalid_string_escape() {
