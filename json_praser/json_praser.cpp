@@ -9,19 +9,85 @@ namespace JP{
         return v.obj.find(key) != v.obj.end();
     }
 
-    const char* Json_Praser::get_string(VAL& v){
+    string Json_Praser::get_string(const VAL& v){
         assert(v.t == JP_STRING);
-        return v.s.c_str();
+        return v.s;
     }
 
-    int Json_Praser::get_obj_size(VAL& v){
+    int Json_Praser::get_obj_size(const VAL& v){
         assert(v.t == JP_OBJECT);
         return v.obj.size();
     }
 
-    int Json_Praser::get_string_length(VAL& v){
+    int Json_Praser::get_string_length(const VAL& v){
         assert(v.t == JP_STRING);
         return v.s.size();
+    }
+
+    void Json_Praser::stringify_string(VAL const& v, string& s){
+        static const char hex_digits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        s.push_back('"');
+        for (int i = 0; i < v.s.size(); i++) {
+            unsigned char ch = (unsigned char)v.s[i];
+            switch (ch) {
+                case '\"': s += "\\\""; break;
+                case '\\': s += "\\\\"; break;
+                case '\b': s += "\\b";  break;
+                case '\f': s += "\\f";  break;
+                case '\n': s += "\\n";  break;
+                case '\r': s += "\\r";  break;
+                case '\t': s += "\\t";  break;
+                default:
+                    if (ch < 0x20) {
+                        s += "\\u00";
+                        s += hex_digits[ch >> 4];
+                        s += hex_digits[ch & 15];
+                    }
+                    else
+                        s += v.s[i];
+            }
+        }
+        s += '"';
+    }
+
+    void Json_Praser::stringify_value(const VAL& v, string& s){
+        switch(v.t){
+            case JP_NULL: s += "null"; break;
+            case JP_FALSE:  s += "false"; break;
+            case JP_TRUE:  s += "true"; break;
+            case JP_NUMBER: s += to_string(get_number(v)); break;
+            case JP_STRING: stringify_string(v, s); break;
+            case JP_ARRAY:
+                s += '[';
+                for (int i = 0; i < v.a.size(); i++) {
+                    if (i > 0)
+                        s += ',';
+                    stringify_value(v, s);
+                }
+                s += ']';
+            break;
+            case JP_OBJECT:
+                s += '{';
+                for (auto it=v.obj.begin(); it != v.obj.end(); it++) {
+                    if (it != v.obj.begin())
+                        s += ',';
+                    VAL e;
+                    init(e);
+                    e.t = JP_STRING;
+                    e.s = it->first;
+                    stringify_string(e, s);
+                    s += ':';
+                    stringify_value(it->second, s);
+                }
+                s += '}';
+            break;
+        }
+    }
+
+    string Json_Praser::stringify(const VAL& v){
+        string ret;
+        stringify_value(v, ret);
+        return ret;
     }
 
     Json_Praser::PRASE_STATE Json_Praser::operator()(string json_str){
@@ -72,8 +138,46 @@ namespace JP{
 
     Json_Praser::PRASE_STATE Json_Praser::prase_obj(VAL& v){
         assert(json[cur_prasc_idx] == '{');
+        cur_prasc_idx += 1;
         jump_space();
-        
+        if(json[cur_prasc_idx] == '}'){
+            cur_prasc_idx += 1;
+            v.t = JP_OBJECT;
+            return PRASE_OK;
+        }
+        PRASE_STATE ret;
+        while(1){
+            VAL k;
+            init(k);
+            if(json[cur_prasc_idx] != '"'){
+                ret = PRASE_MISS_KEY;
+                break;
+            }
+            if ((ret = prase_string(k)) != PRASE_OK)
+                break;
+            VAL val;
+            init(val);
+            jump_space();
+            if(json[cur_prasc_idx] != ':'){
+                ret = PRASE_MISS_COLON;
+                break;
+            }
+            cur_prasc_idx += 1;
+            if ((ret = prase_json(val)) != PRASE_OK)
+                break;
+            v.obj[k.s] = val;
+            jump_space();
+            if(json[cur_prasc_idx] == ','){
+                cur_prasc_idx += 1;
+                jump_space();
+            }else if(json[cur_prasc_idx] == '}'){
+                cur_prasc_idx += 1;
+                v.t = JP_OBJECT;
+                return PRASE_OK;
+            }
+        }
+        init(v);
+        return ret;
     }
 
     bool Json_Praser::parse_hex4(unsigned &u){
@@ -91,7 +195,7 @@ namespace JP{
 
     void Json_Praser::encode_utf_8(VAL& v, unsigned u){
         if (u <= 0x7F)
-            v.s.push_back(u & 0xFF);
+            v.s.push_back(u);
         else if(u<= 0x7FF){
             v.s.push_back(0xC0 | ((u >> 6) & 0xFF));
             v.s.push_back(0x80 | ( u       & 0x3F));
@@ -284,7 +388,7 @@ namespace JP{
         return PRASE_OK;
     }
 
-    double Json_Praser::get_number(VAL& v){
+    double Json_Praser::get_number(const VAL& v){
         assert(v.t == JP_NUMBER);
         return v.number;
     }
@@ -293,13 +397,13 @@ namespace JP{
         return v.t;
     }
 
-    Json_Praser::VAL& Json_Praser::get_array_element(Json_Praser::VAL& v, int idx){
+    Json_Praser::VAL& Json_Praser::get_array_element(VAL& v, int idx){
         assert(v.t == JP_ARRAY);
         assert(v.a.size()> idx && idx>= 0);
         return v.a[idx];
     }
 
-    int Json_Praser::get_array_size(Json_Praser::VAL& v){
+    int Json_Praser::get_array_size(const VAL& v){
         assert(v.t == JP_ARRAY);
         return v.a.size();
     }

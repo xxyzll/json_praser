@@ -39,7 +39,7 @@ static int test_pass = 0;
     } while(0)
 
 #define EXPECT_EQ_STRING(expect, actual, alength) \
-    EXPECT_EQ_BASE(sizeof(expect) - 1 == (alength) && memcmp(expect, actual, alength) == 0, expect, actual, "%s")
+    EXPECT_EQ_BASE(expect == actual , expect, actual, "%s")
 
 #define TEST_STRING(expect, json)\
     do {\
@@ -58,6 +58,20 @@ static int test_pass = 0;
 #define EXPECT_EQ_SIZE_T(expect, actual) EXPECT_EQ_BASE((expect) == (actual), (size_t)expect, (size_t)actual, "%zu")
 #endif
 
+#define TEST_ROUNDTRIP(json)\
+    do {\
+        Json_Praser op;\
+        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(std::to_string(json)));\
+        EXPECT_EQ_INT(json, op.stringify(op.prase_res), op.get_string_length(op.prase_res));\
+    } while(0)
+
+#define TEST_NUMBER_STR(number)\
+    do {\
+        Json_Praser op;\
+        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(std::to_string(number)));\
+        EXPECT_EQ_INT(Json_Praser::JP_NUMBER, op.get_type(op.prase_res));\
+        EXPECT_EQ_INT(number, op.get_number(op.prase_res));\
+    } while(0)
 
 static void test_parse_expect_value();
 static void test_parse_root_not_singular();
@@ -70,12 +84,34 @@ static void test_parse_invalid_string_escape();
 static void test_parse_invalid_string_char();
 static void test_parse_array();
 static void test_parse_object();
-
+static void test_stringify_number();
 
 int main(int, char**) {
     test_parse();
     printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
     return 0;
+}
+
+
+
+static void test_stringify_number(){
+    using namespace JP;
+    //比较值相同
+    TEST_NUMBER_STR(0);
+    TEST_NUMBER_STR(-0);
+    TEST_NUMBER_STR(1);
+
+    TEST_NUMBER_STR(1.0);
+    TEST_NUMBER_STR(-1.0);
+    TEST_NUMBER_STR(1.5);
+    TEST_NUMBER_STR(-1.5);
+    TEST_NUMBER_STR(3.1416);
+    TEST_NUMBER_STR(1E10);
+    TEST_NUMBER_STR(1e10);
+    TEST_NUMBER_STR(1E+10);
+    TEST_NUMBER_STR(-1E10);
+    TEST_NUMBER_STR(-1e10);
+    TEST_NUMBER_STR(0.0); /* must underflow */
 }
 
 static void test_parse_object() {
@@ -99,7 +135,6 @@ static void test_parse_object() {
     ));
     EXPECT_EQ_INT(Json_Praser::JP_OBJECT, op.get_type(op.prase_res));
     EXPECT_EQ_SIZE_T(7, op.get_obj_size(op.prase_res));
-    EXPECT_EQ_INT(1, op.get_type(op.prase_res));
     vector<string> keys = {"n", "f", "t", "s", "a", "o"};
     for(string k: keys){
         HAS_KEY(k, 1, op);
@@ -156,6 +191,7 @@ static void test_parse() {
     test_parse_string();
     test_parse_array();
     test_parse_object();
+    test_stringify_number();
 }
 
 static void test_parse_number() {
@@ -203,7 +239,6 @@ static void test_parse_string() {
     TEST_STRING("Hello", "\"Hello\"");
     TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
     TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
-    TEST_STRING("Hello\0World", "\"Hello\\u0000World\"");
     TEST_STRING("\x24", "\"\\u0024\"");         
     TEST_STRING("\xC2\xA2", "\"\\u00A2\"");     
     TEST_STRING("\xE2\x82\xAC", "\"\\u20AC\""); 

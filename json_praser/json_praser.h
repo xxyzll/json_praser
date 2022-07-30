@@ -28,7 +28,9 @@ public:
         PARSE_MISS_QUOTATION_MARK,
         PARSE_INVALID_STRING_CHAR, //无效的char
         PARSE_INVALID_UNICODE_HEX,   //无效的码点
-        PARSE_MISS_COMMA_OR_SQUARE_BRACKET
+        PARSE_MISS_COMMA_OR_SQUARE_BRACKET,
+        PRASE_MISS_KEY,
+        PRASE_MISS_COLON
     } ;
     //类型定义
     enum TYPE {
@@ -67,18 +69,22 @@ public:
     PRASE_STATE prase_array(VAL& v);    //解析array
     PRASE_STATE prase_obj(VAL& v);      //解析obj
 
+    string stringify(const VAL& v);     //string化对象
+    void stringify_value(const VAL& v, string &s);    //string switch
+    void stringify_string(const VAL& v, string &s);   //string化string
+
     void init(VAL& v);                  //初始化方法
     bool parse_hex4(unsigned &u);       //解析4位码点
     void encode_utf_8(VAL& v, unsigned u);      //编码utf_8
 
 
-    void jump_space();                  //跳过空白
-    double get_number(VAL& v);          //得到数字
-    const char* get_string(VAL& v);     //得到string
-    int get_string_length(VAL& v);      //得到长度
+    void jump_space();                              //跳过空白
+    double get_number(const VAL& v);                //得到数字
+    string get_string(const VAL& v);                //得到string
+    int get_string_length(const VAL& v);            //得到长度
     VAL& get_array_element(VAL& v, int idx);
-    int get_array_size(VAL& v);         //得到数组长度
-    int get_obj_size(VAL& v);           //得到对象size
+    int get_array_size(const VAL& v);               //得到数组长度
+    int get_obj_size(const VAL& v);                 //得到对象size
 
     TYPE get_type(VAL& v);              //得到类型
     PRASE_STATE prase_json(VAL& v);     //开始解析
