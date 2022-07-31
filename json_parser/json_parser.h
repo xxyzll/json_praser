@@ -16,8 +16,9 @@ namespace JP{
 using namespace std;
 class VAL;
 
-class Json_Praser{
+class Json_Parser{
 public:
+
     //返回值状态定义
     enum PRASE_STATE {
         PRASE_OK = 0,           //解析成功
@@ -58,7 +59,7 @@ public:
         map<string, VAL> obj;
     };
 
-    Json_Praser(){};
+    Json_Parser(){};
 
     PRASE_STATE operator()(string json_str);
 public:
@@ -93,7 +94,7 @@ public:
 
     string json;            // 需要解析的json字符串
     int cur_prasc_idx;      // 当前解析的idx
-    VAL prase_res;          // 解析后的数据
+    VAL parse_res;          // 解析后的数据
 
 };
 }

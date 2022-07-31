@@ -1,5 +1,5 @@
 #include <iostream>
-#include "json_praser/json_praser.h"
+#include "json_parser/json_parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,18 +24,18 @@ static int test_pass = 0;
 
 #define TEST_NUMBER(expect, json)\
     do {\
-        Json_Praser op;\
-        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(json));\
-        EXPECT_EQ_INT(Json_Praser::JP_NUMBER, op.get_type(op.prase_res));\
-        EXPECT_EQ_DOUBLE(expect, op.get_number(op.prase_res));\
+        Json_Parser op;\
+        EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(json));\
+        EXPECT_EQ_INT(Json_Parser::JP_NUMBER, op.get_type(op.parse_res));\
+        EXPECT_EQ_DOUBLE(expect, op.get_number(op.parse_res));\
     } while(0)
 
 #define TEST_ERROR(error, json)\
     do {\
-        Json_Praser op;\
-        op.prase_res.t = Json_Praser::JP_NULL;\
+        Json_Parser op;\
+        op.parse_res.t = Json_Parser::JP_NULL;\
         EXPECT_EQ_INT(error, op(json));\
-        EXPECT_EQ_INT(Json_Praser::JP_NULL, op.get_type(op.prase_res));\
+        EXPECT_EQ_INT(Json_Parser::JP_NULL, op.get_type(op.parse_res));\
     } while(0)
 
 #define EXPECT_EQ_STRING(expect, actual, alength) \
@@ -43,14 +43,14 @@ static int test_pass = 0;
 
 #define TEST_STRING(expect, json)\
     do {\
-        Json_Praser op;\
-        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(json));\
-        EXPECT_EQ_INT(Json_Praser::JP_STRING, op.get_type(op.prase_res));\
-        EXPECT_EQ_STRING(expect, op.get_string(op.prase_res), op.get_string_length(op.prase_res));\
+        Json_Parser op;\
+        EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(json));\
+        EXPECT_EQ_INT(Json_Parser::JP_STRING, op.get_type(op.parse_res));\
+        EXPECT_EQ_STRING(expect, op.get_string(op.parse_res), op.get_string_length(op.parse_res));\
     } while(0)
 
 #define HAS_KEY(key, expect, op)\
-    EXPECT_EQ_INT(expect, op.has_key(op.prase_res, key));
+    EXPECT_EQ_INT(expect, op.has_key(op.parse_res, key));
 
 #if defined(_MSC_VER)
 #define EXPECT_EQ_SIZE_T(expect, actual) EXPECT_EQ_BASE((expect) == (actual), (size_t)expect, (size_t)actual, "%Iu")
@@ -60,17 +60,17 @@ static int test_pass = 0;
 
 #define TEST_ROUNDTRIP(json)\
     do {\
-        Json_Praser op;\
-        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(std::to_string(json)));\
-        EXPECT_EQ_INT(json, op.stringify(op.prase_res), op.get_string_length(op.prase_res));\
+        Json_Parser op;\
+        EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(std::to_string(json)));\
+        EXPECT_EQ_INT(json, op.stringify(op.parse_res), op.get_string_length(op.parse_res));\
     } while(0)
 
 #define TEST_NUMBER_STR(number)\
     do {\
-        Json_Praser op;\
-        EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(std::to_string(number)));\
-        EXPECT_EQ_INT(Json_Praser::JP_NUMBER, op.get_type(op.prase_res));\
-        EXPECT_EQ_INT(number, op.get_number(op.prase_res));\
+        Json_Parser op;\
+        EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(std::to_string(number)));\
+        EXPECT_EQ_INT(Json_Parser::JP_NUMBER, op.get_type(op.parse_res));\
+        EXPECT_EQ_INT(number, op.get_number(op.parse_res));\
     } while(0)
 
 static void test_parse_expect_value();
@@ -86,9 +86,15 @@ static void test_parse_array();
 static void test_parse_object();
 static void test_stringify_number();
 
+
+
+
 int main(int, char**) {
     test_parse();
     printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
+    
+    JP::Json_Parser parser;
+    parser("{ \"number\": 123, \"string\": \"567\", \"array\": [1, \"2\"],\"object\": {\"key\": \"value\"}}");
     return 0;
 }
 
@@ -117,12 +123,12 @@ static void test_stringify_number(){
 static void test_parse_object() {
     using namespace JP;
     
-    Json_Praser op;
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(" { } "));
-    EXPECT_EQ_INT(Json_Praser::JP_OBJECT, op.get_type(op.prase_res));
-    EXPECT_EQ_SIZE_T(0, op.get_obj_size(op.prase_res));
+    Json_Parser op;
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(" { } "));
+    EXPECT_EQ_INT(Json_Parser::JP_OBJECT, op.get_type(op.parse_res));
+    EXPECT_EQ_SIZE_T(0, op.get_obj_size(op.parse_res));
 
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op(
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op(
         " { "
         "\"n\" : null , "
         "\"f\" : false , "
@@ -133,8 +139,8 @@ static void test_parse_object() {
         "\"o\" : { \"1\" : 1, \"2\" : 2, \"3\" : 3 }"
         " } "
     ));
-    EXPECT_EQ_INT(Json_Praser::JP_OBJECT, op.get_type(op.prase_res));
-    EXPECT_EQ_SIZE_T(7, op.get_obj_size(op.prase_res));
+    EXPECT_EQ_INT(Json_Parser::JP_OBJECT, op.get_type(op.parse_res));
+    EXPECT_EQ_SIZE_T(7, op.get_obj_size(op.parse_res));
     vector<string> keys = {"n", "f", "t", "s", "a", "o"};
     for(string k: keys){
         HAS_KEY(k, 1, op);
@@ -143,40 +149,40 @@ static void test_parse_object() {
 
 static void test_parse_expect_value() {
     using namespace JP;
-    Json_Praser op;
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("true"));
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("false"));
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("null"));
+    Json_Parser op;
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("true"));
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("false"));
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("null"));
 }
 
 static void test_parse_root_not_singular() {
     using namespace JP;
-    Json_Praser op;
-    EXPECT_EQ_INT(Json_Praser::PARSE_ROOT_NOT_SINGULAR, op("true x"));
-    EXPECT_EQ_INT(Json_Praser::PARSE_ROOT_NOT_SINGULAR, op("false 1"));
-    EXPECT_EQ_INT(Json_Praser::PARSE_ROOT_NOT_SINGULAR, op("null 1"));
+    Json_Parser op;
+    EXPECT_EQ_INT(Json_Parser::PARSE_ROOT_NOT_SINGULAR, op("true x"));
+    EXPECT_EQ_INT(Json_Parser::PARSE_ROOT_NOT_SINGULAR, op("false 1"));
+    EXPECT_EQ_INT(Json_Parser::PARSE_ROOT_NOT_SINGULAR, op("null 1"));
 
      /* invalid number */
-    TEST_ERROR(Json_Praser::PARSE_ROOT_NOT_SINGULAR, "0123"); /* after zero should be '.' or nothing */
-    TEST_ERROR(Json_Praser::PARSE_ROOT_NOT_SINGULAR, "0x0");
-    TEST_ERROR(Json_Praser::PARSE_ROOT_NOT_SINGULAR, "0x123");
+    TEST_ERROR(Json_Parser::PARSE_ROOT_NOT_SINGULAR, "0123"); /* after zero should be '.' or nothing */
+    TEST_ERROR(Json_Parser::PARSE_ROOT_NOT_SINGULAR, "0x0");
+    TEST_ERROR(Json_Parser::PARSE_ROOT_NOT_SINGULAR, "0x123");
 }
 
 static void test_parse_invalid_value() {
     using namespace JP;
-    Json_Praser op;
-    EXPECT_EQ_INT(Json_Praser::PRASE_INVLID_VAL, op("nul"));
-    EXPECT_EQ_INT(Json_Praser::PRASE_INVLID_VAL, op("?"));
+    Json_Parser op;
+    EXPECT_EQ_INT(Json_Parser::PRASE_INVLID_VAL, op("nul"));
+    EXPECT_EQ_INT(Json_Parser::PRASE_INVLID_VAL, op("?"));
 
     /* invalid number */
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "+0");
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "+1");
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, ".123"); /* at least one digit before '.' */
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "1.");   /* at least one digit after '.' */
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "INF");
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "inf");
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "NAN");
-    TEST_ERROR(Json_Praser::PRASE_INVLID_VAL, "nan");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "+0");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "+1");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, ".123"); /* at least one digit before '.' */
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "1.");   /* at least one digit after '.' */
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "INF");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "inf");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "NAN");
+    TEST_ERROR(Json_Parser::PRASE_INVLID_VAL, "nan");
 }
 
 static void test_parse() {
@@ -229,8 +235,8 @@ static void test_parse_number() {
 
 static void test_parse_number_too_big() {
     using namespace JP;
-    TEST_ERROR(Json_Praser::PARSE_NUMBER_TOO_BIG, "1e309");
-    TEST_ERROR(Json_Praser::PARSE_NUMBER_TOO_BIG, "-1e309");
+    TEST_ERROR(Json_Parser::PARSE_NUMBER_TOO_BIG, "1e309");
+    TEST_ERROR(Json_Parser::PARSE_NUMBER_TOO_BIG, "-1e309");
 }
 
 static void test_parse_string() {
@@ -248,48 +254,48 @@ static void test_parse_string() {
 
 static void test_parse_invalid_string_escape() {
     using namespace JP;
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_ESCAPE, "\"\\v\"");
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_ESCAPE, "\"\\'\"");
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_ESCAPE, "\"\\0\"");
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_ESCAPE, "\"\\x12\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_ESCAPE, "\"\\v\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_ESCAPE, "\"\\'\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_ESCAPE, "\"\\0\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_ESCAPE, "\"\\x12\"");
 }
 
 static void test_parse_invalid_string_char() {
     using namespace JP;
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_CHAR, "\"\x01\"");
-    TEST_ERROR(Json_Praser::PARSE_INVALID_STRING_CHAR, "\"\x1F\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_CHAR, "\"\x01\"");
+    TEST_ERROR(Json_Parser::PARSE_INVALID_STRING_CHAR, "\"\x1F\"");
 }
 
 static void test_parse_array() {
     size_t i, j;
     using namespace JP;
-    Json_Praser op;
+    Json_Parser op;
 
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("[ ]"));
-    EXPECT_EQ_INT(Json_Praser::JP_ARRAY, op.get_type(op.prase_res));
-    EXPECT_EQ_SIZE_T(0, op.get_array_size(op.prase_res));
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("[ ]"));
+    EXPECT_EQ_INT(Json_Parser::JP_ARRAY, op.get_type(op.parse_res));
+    EXPECT_EQ_SIZE_T(0, op.get_array_size(op.parse_res));
 
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("[ null , false , true , 123 , \"abc\" ]"));
-    EXPECT_EQ_INT(Json_Praser::JP_ARRAY, op.get_type(op.prase_res));
-    EXPECT_EQ_SIZE_T(5, op.get_array_size(op.prase_res));
-    EXPECT_EQ_INT(Json_Praser::JP_NULL,   op.get_type(op.get_array_element(op.prase_res, 0)));
-    EXPECT_EQ_INT(Json_Praser::JP_FALSE,  op.get_type(op.get_array_element(op.prase_res, 1)));
-    EXPECT_EQ_INT(Json_Praser::JP_TRUE,   op.get_type(op.get_array_element(op.prase_res, 2)));
-    EXPECT_EQ_INT(Json_Praser::JP_NUMBER, op.get_type(op.get_array_element(op.prase_res, 3)));
-    EXPECT_EQ_INT(Json_Praser::JP_STRING, op.get_type(op.get_array_element(op.prase_res, 4)));
-    EXPECT_EQ_DOUBLE(123.0, op.get_number(op.get_array_element(op.prase_res, 3)));
-    EXPECT_EQ_STRING("abc", op.get_string(op.get_array_element(op.prase_res, 4)), op.get_string_length(op.get_array_element(op.prase_res, 4)));
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("[ null , false , true , 123 , \"abc\" ]"));
+    EXPECT_EQ_INT(Json_Parser::JP_ARRAY, op.get_type(op.parse_res));
+    EXPECT_EQ_SIZE_T(5, op.get_array_size(op.parse_res));
+    EXPECT_EQ_INT(Json_Parser::JP_NULL,   op.get_type(op.get_array_element(op.parse_res, 0)));
+    EXPECT_EQ_INT(Json_Parser::JP_FALSE,  op.get_type(op.get_array_element(op.parse_res, 1)));
+    EXPECT_EQ_INT(Json_Parser::JP_TRUE,   op.get_type(op.get_array_element(op.parse_res, 2)));
+    EXPECT_EQ_INT(Json_Parser::JP_NUMBER, op.get_type(op.get_array_element(op.parse_res, 3)));
+    EXPECT_EQ_INT(Json_Parser::JP_STRING, op.get_type(op.get_array_element(op.parse_res, 4)));
+    EXPECT_EQ_DOUBLE(123.0, op.get_number(op.get_array_element(op.parse_res, 3)));
+    EXPECT_EQ_STRING("abc", op.get_string(op.get_array_element(op.parse_res, 4)), op.get_string_length(op.get_array_element(op.parse_res, 4)));
 
-    EXPECT_EQ_INT(Json_Praser::PRASE_OK, op("[ [ ] , [ 0 ] , [ 0 , 1 ] , [ 0 , 1 , 2 ] ]"));
-    EXPECT_EQ_INT(Json_Praser::JP_ARRAY, op.get_type(op.prase_res));
-    EXPECT_EQ_SIZE_T(4, op.get_array_size(op.prase_res));
+    EXPECT_EQ_INT(Json_Parser::PRASE_OK, op("[ [ ] , [ 0 ] , [ 0 , 1 ] , [ 0 , 1 , 2 ] ]"));
+    EXPECT_EQ_INT(Json_Parser::JP_ARRAY, op.get_type(op.parse_res));
+    EXPECT_EQ_SIZE_T(4, op.get_array_size(op.parse_res));
     for (i = 0; i < 4; i++) {
-        Json_Praser::VAL v = op.get_array_element(op.prase_res, i);
-        EXPECT_EQ_INT(Json_Praser::JP_ARRAY, op.get_type(v));
+        Json_Parser::VAL v = op.get_array_element(op.parse_res, i);
+        EXPECT_EQ_INT(Json_Parser::JP_ARRAY, op.get_type(v));
         EXPECT_EQ_SIZE_T(i, op.get_array_size(v));
         for (j = 0; j < i; j++) {
-            Json_Praser::VAL e = op.get_array_element(v, j);
-            EXPECT_EQ_INT(Json_Praser::JP_NUMBER, op.get_type(e));
+            Json_Parser::VAL e = op.get_array_element(v, j);
+            EXPECT_EQ_INT(Json_Parser::JP_NUMBER, op.get_type(e));
             EXPECT_EQ_DOUBLE((double)j, op.get_number(e));
         }
     }

@@ -81,40 +81,40 @@ CMakeFiles/json_praser.dir/main.cpp.o.provides: CMakeFiles/json_praser.dir/main.
 CMakeFiles/json_praser.dir/main.cpp.o.provides.build: CMakeFiles/json_praser.dir/main.cpp.o
 
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o: CMakeFiles/json_praser.dir/flags.make
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o: ../json_praser/json_praser.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xx/桌面/json_prase_c++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o -c /home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o: CMakeFiles/json_praser.dir/flags.make
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o: ../json_parser/json_parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xx/桌面/json_prase_c++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o -c /home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp > CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.i
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp > CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.i
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp -o CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.s
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp -o CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.s
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.requires:
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.requires:
 
-.PHONY : CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.requires
+.PHONY : CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.requires
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.provides: CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.requires
-	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.provides.build
-.PHONY : CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.provides
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.provides: CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.provides.build
+.PHONY : CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.provides
 
-CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.provides.build: CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o
+CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.provides.build: CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o
 
 
 # Object files for target json_praser
 json_praser_OBJECTS = \
 "CMakeFiles/json_praser.dir/main.cpp.o" \
-"CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o"
+"CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o"
 
 # External object files for target json_praser
 json_praser_EXTERNAL_OBJECTS =
 
 json_praser: CMakeFiles/json_praser.dir/main.cpp.o
-json_praser: CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o
+json_praser: CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o
 json_praser: CMakeFiles/json_praser.dir/build.make
 json_praser: CMakeFiles/json_praser.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/xx/桌面/json_prase_c++/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable json_praser"
@@ -126,7 +126,7 @@ CMakeFiles/json_praser.dir/build: json_praser
 .PHONY : CMakeFiles/json_praser.dir/build
 
 CMakeFiles/json_praser.dir/requires: CMakeFiles/json_praser.dir/main.cpp.o.requires
-CMakeFiles/json_praser.dir/requires: CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o.requires
+CMakeFiles/json_praser.dir/requires: CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o.requires
 
 .PHONY : CMakeFiles/json_praser.dir/requires
 

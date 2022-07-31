@@ -1,1 +1,1 @@
-/usr/bin/g++  -g  -rdynamic CMakeFiles/json_praser.dir/main.cpp.o CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o  -o json_praser 
+/usr/bin/g++  -g  -rdynamic CMakeFiles/json_praser.dir/main.cpp.o CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o  -o json_praser 

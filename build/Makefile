@@ -520,32 +520,32 @@ ExperimentalBuild/fast:
 	$(MAKE) -f CMakeFiles/ExperimentalBuild.dir/build.make CMakeFiles/ExperimentalBuild.dir/build
 .PHONY : ExperimentalBuild/fast
 
-json_praser/json_praser.o: json_praser/json_praser.cpp.o
+json_parser/json_parser.o: json_parser/json_parser.cpp.o
 
-.PHONY : json_praser/json_praser.o
+.PHONY : json_parser/json_parser.o
 
 # target to build an object file
-json_praser/json_praser.cpp.o:
-	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o
-.PHONY : json_praser/json_praser.cpp.o
+json_parser/json_parser.cpp.o:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o
+.PHONY : json_parser/json_parser.cpp.o
 
-json_praser/json_praser.i: json_praser/json_praser.cpp.i
+json_parser/json_parser.i: json_parser/json_parser.cpp.i
 
-.PHONY : json_praser/json_praser.i
+.PHONY : json_parser/json_parser.i
 
 # target to preprocess a source file
-json_praser/json_praser.cpp.i:
-	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.i
-.PHONY : json_praser/json_praser.cpp.i
+json_parser/json_parser.cpp.i:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.i
+.PHONY : json_parser/json_parser.cpp.i
 
-json_praser/json_praser.s: json_praser/json_praser.cpp.s
+json_parser/json_parser.s: json_parser/json_parser.cpp.s
 
-.PHONY : json_praser/json_praser.s
+.PHONY : json_parser/json_parser.s
 
 # target to generate assembly for a file
-json_praser/json_praser.cpp.s:
-	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.s
-.PHONY : json_praser/json_praser.cpp.s
+json_parser/json_parser.cpp.s:
+	$(MAKE) -f CMakeFiles/json_praser.dir/build.make CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.s
+.PHONY : json_parser/json_parser.cpp.s
 
 main.o: main.cpp.o
 
@@ -614,9 +614,9 @@ help:
 	@echo "... ContinuousTest"
 	@echo "... ContinuousUpdate"
 	@echo "... ExperimentalBuild"
-	@echo "... json_praser/json_praser.o"
-	@echo "... json_praser/json_praser.i"
-	@echo "... json_praser/json_praser.s"
+	@echo "... json_parser/json_parser.o"
+	@echo "... json_parser/json_parser.i"
+	@echo "... json_parser/json_parser.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

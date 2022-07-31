@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp
-json_praser.h
-/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+/home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp
+json_parser.h
+/home/xx/桌面/json_prase_c++/json_parser/json_parser.h
 
-/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+/home/xx/桌面/json_prase_c++/json_parser/json_parser.h
 iostream
 -
 vector
@@ -35,8 +35,8 @@ map
 /home/xx/桌面/json_prase_c++/main.cpp
 iostream
 -
-json_praser/json_praser.h
-/home/xx/桌面/json_prase_c++/json_praser/json_praser.h
+json_parser/json_parser.h
+/home/xx/桌面/json_prase_c++/json_parser/json_parser.h
 stdio.h
 -
 stdlib.h

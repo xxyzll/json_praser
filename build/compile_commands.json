@@ -6,7 +6,7 @@
 },
 {
   "directory": "/home/xx/桌面/json_prase_c++/build",
-  "command": "/usr/bin/g++    -g   -o CMakeFiles/json_praser.dir/json_praser/json_praser.cpp.o -c /home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp",
-  "file": "/home/xx/桌面/json_prase_c++/json_praser/json_praser.cpp"
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/json_praser.dir/json_parser/json_parser.cpp.o -c /home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp",
+  "file": "/home/xx/桌面/json_prase_c++/json_parser/json_parser.cpp"
 }
 ]
